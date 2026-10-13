@@ -1,0 +1,918 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>시험 응원 답안지</title>
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=East+Sea+Dokdo&family=Gaegu:wght@400;700&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans+KR:wght@400;500;700&display=swap">
+<style>
+/* Layout: one OMR answer sheet sized for a phone. Timing marks run down the left edge, OMR header boxes on top, red-ruled sections, a bubble tab bar at the bottom. */
+:root{
+  --paper:#fffcfa;
+  --panel:#f9f2f1;
+  --ink:#1d1c24;
+  --pencil:#716a70;
+  --omr:#d33a57;
+  --omr-tint:#fce8ec;
+  --hl:#ffee6b;
+  --spark:#f5c400;
+  --font-form:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --font-hand:"Gaegu","Nanum Pen Script","Apple SD Gothic Neo",cursive;
+  --font-num:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+  --font-brush:"East Sea Dokdo","Gaegu",cursive;
+  /* the talisman is a physical object: same yellow paper and red ink in both themes */
+  --charm-paper:#f6d84f;
+  --charm-ink:#c41a2f;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#17161b; --panel:#201e25; --ink:#f1eee9; --pencil:#a49ca3; --omr:#ff738b; --omr-tint:#3a1f27; --hl:#6b5c0f; --spark:#ffd93a;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#17161b; --panel:#201e25; --ink:#f1eee9; --pencil:#a49ca3; --omr:#ff738b; --omr-tint:#3a1f27; --hl:#6b5c0f; --spark:#ffd93a;
+  color-scheme:dark;
+}
+
+[hidden]{display:none!important}
+*{-webkit-tap-highlight-color:transparent}
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--font-form);
+  font-size:16px;
+  line-height:1.6;
+  padding-inline:16px;
+  padding-block:18px calc(92px + env(safe-area-inset-bottom, 0px));
+}
+.sheet{
+  max-width:32rem;
+  margin:0 auto;
+  position:relative;
+  padding-left:22px;
+  display:flex;
+  flex-direction:column;
+}
+/* OMR timing marks */
+.sheet::before{
+  content:"";
+  position:absolute;
+  left:0; top:4px; bottom:4px;
+  width:9px;
+  background:repeating-linear-gradient(to bottom,var(--ink) 0 5px,transparent 5px 20px);
+}
+
+.preview{
+  background:var(--hl);
+  color:var(--ink);
+  font-size:.82rem;
+  padding:.45rem .7rem;
+  margin:0 0 1rem;
+}
+
+/* header */
+.top{
+  display:flex;
+  justify-content:space-between;
+  gap:1rem;
+  font-size:.72rem;
+  letter-spacing:.06em;
+  color:var(--omr);
+  font-weight:500;
+}
+h1{
+  font-size:clamp(2rem,9.5vw,2.6rem);
+  line-height:1.15;
+  letter-spacing:-.035em;
+  font-weight:700;
+  margin:.3rem 0 .9rem;
+  text-wrap:balance;
+}
+.boxes{
+  display:grid;
+  grid-template-columns:1fr 1.2fr 1fr;
+  border:1px solid var(--omr);
+}
+.box{display:flex;flex-direction:column;min-width:0;border-left:1px solid var(--omr)}
+.box:first-child{border-left:0}
+.lab{
+  background:var(--omr-tint);
+  color:var(--omr);
+  font-size:.7rem;
+  font-weight:500;
+  letter-spacing:.06em;
+  text-align:center;
+  padding:.25rem .2rem;
+  border-bottom:1px solid var(--omr);
+}
+.val{flex:1;display:grid;place-items:center;text-align:center;padding:.5rem .3rem;min-height:3.6rem}
+.val.name{font-family:var(--font-hand);font-weight:700;font-size:1.9rem;line-height:1}
+.val.period{font-family:var(--font-num);font-size:.76rem;line-height:1.45;font-variant-numeric:tabular-nums}
+.stamp{
+  width:2.7rem;height:2.7rem;
+  border:2px solid var(--omr);
+  border-radius:50%;
+  color:var(--omr);
+  display:grid;place-items:center;
+  font-family:var(--font-hand);
+  font-weight:700;
+  font-size:1.05rem;
+  transform:rotate(-10deg);
+}
+.note{font-size:.76rem;color:var(--pencil);margin:.6rem 0 0;line-height:1.5}
+
+/* sections */
+.q{
+  border-top:1px solid var(--omr);
+  margin-top:1.6rem;
+  padding-top:1rem;
+  display:flex;
+  flex-direction:column;
+  gap:.85rem;
+  scroll-margin-top:12px;
+}
+.q-label{
+  align-self:flex-start;
+  font-size:.74rem;
+  font-weight:500;
+  letter-spacing:.05em;
+  color:var(--omr);
+  background:var(--omr-tint);
+  padding:.2rem .55rem;
+}
+
+/* bubbles */
+.bub{
+  width:15px;height:21px;
+  border:1.3px solid var(--omr);
+  border-radius:50%;
+  display:grid;place-items:center;
+  font:500 9px/1 var(--font-num);
+  color:var(--omr);
+  flex:none;
+}
+.bub.on{background:var(--ink);border-color:var(--ink);color:transparent}
+
+/* D-day */
+.dday{display:flex;align-items:center;justify-content:space-between;gap:.8rem}
+.dday-text{min-width:0}
+.dday-label{font-size:.88rem;color:var(--pencil);margin:0}
+.big{
+  font-family:var(--font-num),var(--font-form);
+  font-weight:600;
+  font-size:clamp(3.3rem,19vw,4.8rem);
+  line-height:1;
+  letter-spacing:-.045em;
+  margin:.2rem 0 .55rem;
+  font-variant-numeric:tabular-nums;
+}
+.sub{margin:0;font-weight:500;font-size:.98rem}
+.hl{background:linear-gradient(transparent 52%,var(--hl) 52%);padding-inline:.1em}
+.cols{display:flex;gap:4px}
+.col{display:flex;flex-direction:column;gap:2px}
+.col .bub{width:12px;height:16px;font-size:8px;border-width:1.2px}
+
+.strip{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:.2rem;text-align:center}
+.day{display:flex;flex-direction:column;align-items:center;gap:.25rem}
+.day .bub{width:30px;height:40px;font-size:.74rem;border-width:1.5px}
+.day small{font-size:.72rem;color:var(--pencil);line-height:1.2}
+.day.rest .bub{border-style:dashed;border-color:var(--pencil);color:var(--pencil)}
+.day.done .bub{background:var(--ink);border-color:var(--ink);border-style:solid;color:var(--paper)}
+.day.today .bub{border:2.5px solid var(--omr);background:var(--omr-tint);color:var(--omr)}
+.day.today small{color:var(--omr);font-weight:500}
+
+/* attendance stamps */
+.stamp-head{display:flex;justify-content:space-between;align-items:baseline;gap:.8rem}
+.stamp-head p{margin:0;min-width:0;font-size:.95rem}
+.stamp-count{font-family:var(--font-num);font-weight:600;font-variant-numeric:tabular-nums;color:var(--omr);flex:none}
+.stamps{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));border-top:1px solid var(--omr);border-left:1px solid var(--omr)}
+.st{
+  position:relative;
+  aspect-ratio:1/1.1;
+  max-width:100%;
+  border-right:1px solid var(--omr);
+  border-bottom:1px solid var(--omr);
+  display:grid;place-items:center;
+}
+.st > small{position:absolute;top:3px;left:4px;font:500 .62rem/1 var(--font-num);color:var(--pencil)}
+.st.today{background:var(--omr-tint)}
+.st.out > small{opacity:.45}
+.mark{
+  width:76%;aspect-ratio:1;max-width:100%;
+  border:2px solid var(--omr);
+  border-radius:50%;
+  color:var(--omr);
+  display:grid;place-items:center;
+  font-family:var(--font-hand);font-weight:700;font-size:.9rem;line-height:1;
+  transform:rotate(var(--r,-8deg));
+  margin-top:6px;
+}
+.mark.new{animation:press .45s cubic-bezier(.2,.9,.3,1.3)}
+@keyframes press{from{transform:scale(1.7) rotate(var(--r,-8deg));opacity:0}to{transform:scale(1) rotate(var(--r,-8deg));opacity:1}}
+.stamp-goal{margin:0;font-size:.82rem;color:var(--pencil)}
+
+/* handwritten notes */
+.date-row{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+.date{font-family:var(--font-num);font-size:.85rem;color:var(--pencil)}
+.tag{font-size:.74rem;font-weight:500;padding:.1rem .45rem;background:var(--hl);color:var(--ink)}
+.lined{
+  font-family:var(--font-hand);
+  font-size:1.6rem;
+  line-height:2.25rem;
+  margin:0;
+  background:repeating-linear-gradient(to bottom,transparent 0 calc(2.25rem - 1px),var(--omr-tint) calc(2.25rem - 1px) 2.25rem);
+  padding-bottom:2px;
+}
+.bonus{color:var(--omr)}
+.weekend-note{margin:0;font-size:.88rem;color:var(--pencil)}
+
+/* fortune */
+.fields{display:grid;grid-template-columns:max-content 1fr;border:1px solid var(--omr);margin:0}
+.fields dt,.fields dd{margin:0;padding:.6rem .7rem;border-bottom:1px solid var(--omr);min-width:0}
+.fields dt{
+  background:var(--omr-tint);color:var(--omr);
+  font-size:.74rem;font-weight:500;letter-spacing:.03em;white-space:nowrap;
+  display:flex;align-items:center;
+  border-right:1px solid var(--omr);
+}
+.fields dt:last-of-type,.fields dd:last-of-type{border-bottom:0}
+.frow{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap}
+.fnote{font-size:.78rem;color:var(--pencil)}
+#fTool{font-weight:500}
+
+/* buttons */
+.btn{
+  font:500 1rem var(--font-form);
+  min-height:50px;
+  padding:.6rem 1rem;
+  border:1.5px solid var(--ink);
+  background:var(--ink);
+  color:var(--paper);
+  border-radius:3px;
+  cursor:pointer;
+  width:100%;
+}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn:active,.card:active{transform:translateY(1px)}
+.btn:focus-visible,.seg button:focus-visible,.card:focus-visible,.nav button:focus-visible{outline:2px solid var(--omr);outline-offset:2px}
+.pair{display:grid;grid-template-columns:1.4fr 1fr;gap:.5rem}
+
+/* cheer draw */
+.card{
+  appearance:none;
+  width:100%;
+  text-align:left;
+  font:inherit;
+  color:var(--ink);
+  background:var(--panel);
+  border:1.5px dashed var(--omr);
+  border-radius:3px;
+  padding:1rem 1.1rem 1.2rem;
+  min-height:10rem;
+  display:flex;
+  flex-direction:column;
+  gap:.6rem;
+  cursor:pointer;
+}
+.card-top{display:flex;justify-content:space-between;align-items:center;gap:.5rem;width:100%}
+.draw-no{font-family:var(--font-num);font-size:.75rem;color:var(--pencil)}
+.tap{font-size:.74rem;font-weight:500;color:var(--paper);background:var(--omr);padding:.15rem .5rem;border-radius:2px}
+.card-text{font-family:var(--font-hand);font-size:1.65rem;line-height:1.45;flex:1;display:flex;align-items:center}
+.card-text.empty{color:var(--pencil)}
+.pop{animation:pop .35s ease-out}
+@keyframes pop{from{transform:translateY(6px);opacity:.3}to{transform:none;opacity:1}}
+
+.bubrow{display:flex;gap:4px}
+
+.from{margin:2.2rem 0 0;text-align:right;font-family:var(--font-hand);font-size:1.8rem}
+
+/* mood check */
+.mood-q{margin:0;font-weight:500}
+.moods{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.4rem}
+.mood{
+  appearance:none;
+  font:500 .92rem var(--font-form);
+  color:var(--ink);
+  background:var(--paper);
+  border:1px solid var(--omr);
+  border-radius:3px;
+  min-height:76px;
+  padding:.5rem .25rem;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.4rem;
+  cursor:pointer;
+}
+.mood .bub{width:18px;height:25px;font-size:10px}
+.mood[aria-pressed="true"]{background:var(--omr-tint);color:var(--omr)}
+.mood[aria-pressed="true"] .bub{background:var(--ink);border-color:var(--ink);color:transparent}
+.mood:active{transform:translateY(1px)}
+.mood:focus-visible,.mini-charm:focus-visible{outline:2px solid var(--omr);outline-offset:2px}
+.mood-reply.empty{color:var(--pencil)}
+
+/* charm */
+.charm-row{display:grid;grid-template-columns:4.8rem 1fr;gap:1rem;align-items:center}
+.mini-charm{
+  appearance:none;
+  padding:0;
+  cursor:pointer;
+  aspect-ratio:3/5;
+  max-width:100%;
+  background:var(--charm-paper);
+  color:var(--charm-ink);
+  border:2px solid var(--charm-ink);
+  outline:1px solid var(--charm-ink);
+  outline-offset:-6px;
+  display:grid;place-items:center;
+  font-family:var(--font-brush);
+  font-size:2rem;
+  line-height:1;
+  transform:rotate(-3deg);
+}
+.mini-charm span{writing-mode:vertical-rl}
+.charm-side{display:flex;flex-direction:column;gap:.6rem;min-width:0}
+.charm-side p{margin:0;font-size:.92rem}
+
+.overlay{
+  position:fixed;inset:0;z-index:60;
+  background:rgba(18,16,22,.66);
+  display:grid;place-items:center;
+  padding:calc(16px + env(safe-area-inset-top, 0px)) 16px calc(16px + env(safe-area-inset-bottom, 0px));
+}
+.overlay-inner{display:flex;flex-direction:column;align-items:center;gap:.9rem;width:100%;max-height:100%}
+.talisman{
+  position:relative;
+  width:min(21rem, 100%, calc((100vh - 150px) * .625));
+  aspect-ratio:5/8;
+  background:var(--charm-paper);
+  color:var(--charm-ink);
+  border:3px solid var(--charm-ink);
+  box-shadow:0 18px 40px rgba(0,0,0,.35);
+  display:grid;
+  grid-template-rows:auto 1fr auto;
+  gap:.4rem;
+  padding:1.2rem 1rem 1rem;
+  animation:unfold .5s cubic-bezier(.2,.9,.3,1.15);
+}
+.talisman::before{content:"";position:absolute;inset:8px;border:1.5px solid var(--charm-ink);pointer-events:none}
+@keyframes unfold{from{transform:scale(.6) rotate(-8deg);opacity:0}to{transform:none;opacity:1}}
+.t-top{margin:0;text-align:center;font:700 .78rem var(--font-form);letter-spacing:.32em}
+.t-body{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;justify-items:center;min-height:0}
+.t-side,.t-main{writing-mode:vertical-rl;font-family:var(--font-brush);line-height:.95}
+.t-side{font-size:clamp(1.5rem,7.5vw,2.2rem)}
+.t-main{font-size:clamp(4.6rem,26vw,7.4rem)}
+.t-foot{display:flex;flex-direction:column;align-items:center;gap:.3rem;font-size:.72rem;text-align:center}
+.t-foot .bub{border-color:var(--charm-ink);color:var(--charm-ink)}
+.t-foot .bub.on{background:var(--charm-ink);border-color:var(--charm-ink);color:transparent}
+.t-name{font-family:var(--font-num);font-size:.64rem;letter-spacing:.04em}
+.t-seal{
+  position:absolute;top:16px;right:16px;
+  width:2.9rem;height:2.9rem;
+  border:2px solid var(--charm-ink);
+  display:grid;place-items:center;
+  font-family:var(--font-brush);font-size:.95rem;line-height:1.05;
+  writing-mode:vertical-rl;
+  transform:rotate(5deg);
+}
+.charm-close{width:min(21rem,100%)}
+
+@media (prefers-reduced-motion: reduce){
+  .talisman{animation:none}
+}
+
+/* bottom tab bar */
+.nav{
+  position:fixed;
+  left:0; right:0; bottom:0;
+  z-index:40;
+  background:var(--paper);
+  border-top:1px solid var(--omr);
+  padding:6px 12px calc(6px + env(safe-area-inset-bottom, 0px));
+}
+.nav-inner{max-width:32rem;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr)}
+.nav button{
+  background:none;border:0;cursor:pointer;
+  color:var(--pencil);
+  font:500 .72rem var(--font-form);
+  min-height:48px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+}
+.nav .dot{width:12px;height:16px;border:1.3px solid currentColor;border-radius:50%}
+.nav button[aria-current="true"]{color:var(--omr)}
+.nav button[aria-current="true"] .dot{background:var(--ink);border-color:var(--ink)}
+
+@media (prefers-reduced-motion: reduce){
+  .pop,.mark.new{animation:none}
+  .bar span{transition:none}
+}
+</style>
+</head>
+<body>
+
+<main class="sheet">
+  <p class="preview" id="preview" hidden></p>
+
+  <header>
+    <div class="top"><span>2026학년도 2학기</span><span>응원 답안지 · 1매</span></div>
+    <h1>시험 응원 답안지</h1>
+    <div class="boxes">
+      <div class="box"><span class="lab">성명</span><span class="val name">허율</span></div>
+      <div class="box"><span class="lab">시험 기간</span><span class="val period">10.22 목<br>~ 10.27 화</span></div>
+      <div class="box"><span class="lab">감독관</span><span class="val"><span class="stamp">서준</span></span></div>
+    </div>
+    <p class="note">※ 이 답안지는 감점이 없습니다. 매일 카드를 찍으면 도장이 쌓이고, 한마디와 운세가 바뀝니다.</p>
+  </header>
+
+  <section class="q" id="sec-dday" aria-labelledby="l-dday">
+    <span class="q-label" id="l-dday">남은 날</span>
+    <div class="dday">
+      <div class="dday-text">
+        <p class="dday-label" id="ddLabel">시험 시작까지</p>
+        <p class="big" id="ddBig">D-8</p>
+        <p class="sub"><span class="hl" id="ddSub">10월 22일 목요일부터 시작</span></p>
+      </div>
+      <div class="cols" id="ddCols" aria-hidden="true"></div>
+    </div>
+    <div class="strip" id="strip" aria-label="시험 기간 날짜"></div>
+  </section>
+
+  <section class="q" id="sec-stamp" aria-labelledby="l-stamp">
+    <span class="q-label" id="l-stamp">출석 도장</span>
+    <div class="stamp-head">
+      <p id="stampMsg">카드를 찍은 날마다 도장이 하나씩 찍혀.</p>
+      <span class="stamp-count" id="stampCount">0 / 10</span>
+    </div>
+    <div class="stamps" id="stamps"></div>
+    <p class="stamp-goal" id="stampGoal">10개 모으면 보너스 메시지가 열려.</p>
+    <p class="lined bonus" id="stampBonus" hidden>도장 10개 달성! 매일 열어본 거 다 보여. 이렇게 꾸준한 사람이 시험도 잘 봐.</p>
+  </section>
+
+  <section class="q" id="sec-today" aria-labelledby="l-daily">
+    <span class="q-label" id="l-daily">오늘의 한마디</span>
+    <div class="date-row">
+      <span class="date" id="dDate"></span>
+      <span class="tag" id="weekendTag" hidden>주말 쉬어가기</span>
+    </div>
+    <p class="lined" id="dMsg"></p>
+    <p class="weekend-note" id="weekendNote" hidden>남은 시험은 이틀, 26일 월요일과 27일 화요일이야.</p>
+  </section>
+
+  <section class="q" id="sec-mood" aria-labelledby="l-mood">
+    <span class="q-label" id="l-mood">오늘 기분 체크</span>
+    <p class="mood-q">오늘 공부 컨디션은?</p>
+    <div class="moods" role="group" aria-label="오늘 기분">
+      <button type="button" class="mood" data-mood="dead" aria-pressed="false"><span class="bub" aria-hidden="true">1</span>죽겠다</button>
+      <button type="button" class="mood" data-mood="soso" aria-pressed="false"><span class="bub" aria-hidden="true">2</span>그럭저럭</button>
+      <button type="button" class="mood" data-mood="good" aria-pressed="false"><span class="bub" aria-hidden="true">3</span>자신 있음</button>
+    </div>
+    <p class="lined mood-reply empty" id="moodReply" aria-live="polite">하나 골라봐. 기분에 맞는 답장이 나와.</p>
+  </section>
+
+  <section class="q" id="sec-fortune" aria-labelledby="l-fortune">
+    <span class="q-label" id="l-fortune">오늘의 시험운</span>
+    <dl class="fields">
+      <dt>시험운</dt><dd class="frow"><span class="bubrow" id="fScore" aria-hidden="true"></span><span class="fnote" id="fScoreText"></span></dd>
+      <dt>행운의 번호</dt><dd class="frow"><span class="bubrow" id="fNum" aria-hidden="true"></span><span class="fnote" id="fNumText"></span></dd>
+      <dt>행운의 필기구</dt><dd id="fTool"></dd>
+    </dl>
+    <p class="lined" id="fLine"></p>
+  </section>
+
+  <section class="q" id="sec-draw" aria-labelledby="l-draw">
+    <span class="q-label" id="l-draw">응원 뽑기</span>
+    <button class="card" id="drawCard" type="button" aria-describedby="drawHint">
+      <span class="card-top"><span class="draw-no" id="drawNo">응원 카드</span><span class="tap">눌러서 뽑기</span></span>
+      <span class="card-text empty" id="drawText" aria-live="polite">지칠 때 눌러봐. 응원이 한 장씩 나와.</span>
+    </button>
+    <p class="stamp-goal" id="drawHint">누를 때마다 새로운 응원이 나와.</p>
+  </section>
+
+  <section class="q" id="sec-charm" aria-labelledby="l-charm">
+    <span class="q-label" id="l-charm">만점 부적</span>
+    <div class="charm-row">
+      <button type="button" class="mini-charm" id="miniCharm" aria-label="만점 부적 펼치기"><span>만점</span></button>
+      <div class="charm-side">
+        <p>시험 보기 직전에 펼쳐 봐. 효력은 10월 27일까지.</p>
+        <button class="btn" id="charmOpen" type="button">부적 펼치기</button>
+      </div>
+    </div>
+  </section>
+
+  <p class="from">from. 서준</p>
+</main>
+
+<div class="overlay" id="charmOverlay" role="dialog" aria-modal="true" aria-label="만점 부적" hidden>
+  <div class="overlay-inner">
+    <div class="talisman">
+      <p class="t-top">만점 기원 부적</p>
+      <div class="t-body">
+        <span class="t-side">실수 금지</span>
+        <span class="t-main">만점</span>
+        <span class="t-side">시험 대박</span>
+      </div>
+      <div class="t-foot">
+        <span class="bubrow" id="charmBubs" aria-hidden="true"></span>
+        <span>정답에만 손이 가는 부적</span>
+        <span class="t-name">허율 전용 · 양도 불가 · 효력 10.22–10.27</span>
+      </div>
+      <span class="t-seal" aria-hidden="true">서준</span>
+    </div>
+    <button class="btn charm-close" id="charmClose" type="button">부적 접기</button>
+  </div>
+</div>
+
+<nav class="nav" aria-label="바로 가기">
+  <div class="nav-inner">
+    <button type="button" data-target="sec-dday"><span class="dot"></span>디데이</button>
+    <button type="button" data-target="sec-today"><span class="dot"></span>오늘</button>
+    <button type="button" data-target="sec-draw"><span class="dot"></span>뽑기</button>
+    <button type="button" data-target="sec-charm"><span class="dot"></span>부적</button>
+  </div>
+</nav>
+
+<script>
+(function(){
+  "use strict";
+  var $ = function(id){ return document.getElementById(id); };
+  var reduce = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+
+  /* ---------- settings ---------- */
+  var DAY = 864e5, TZ = 9 * 3600e3;
+  function dayNum(y, m, d){ return Math.floor(Date.UTC(y, m - 1, d) / DAY); }
+  var START = dayNum(2026, 10, 22), LAST = dayNum(2026, 10, 27);
+  var EXAM = [dayNum(2026,10,22), dayNum(2026,10,23), dayNum(2026,10,26), dayNum(2026,10,27)];
+  var WEEKEND = [dayNum(2026,10,24), dayNum(2026,10,25)];
+  var UNLOCK = Date.parse("2026-10-27T13:00:00+09:00");
+  var DOW = ["일","월","화","수","목","금","토"];
+
+  var DAILY = {
+    "10-14": "율아, 시험 8일 남았다. \"아직 8일이나 남았네\" 하는 지금이 제일 위험한 거 알지?",
+    "10-15": "일주일 남았다. 책상 정리는 이제 그만. 책상은 이미 충분히 깨끗해. 책을 펴자.",
+    "10-16": "불금? 우리한텐 불타는 공부의 금요일이다. 농담이고 저녁은 맛있는 거 먹어.",
+    "10-17": "주말 아침에 알람 끄고 \"5분만\" 하는 순간 점심이다. 조심해라.",
+    "10-18": "공부하다 폰 봐도 폰이 시험을 대신 쳐주진 않아. 슬프지만 사실이야.",
+    "10-19": "D-3. 이 카드 찍었다는 건 지금 폰 들고 있다는 거지? 딱 이것만 보고 내려놔.",
+    "10-20": "이틀 남았다. 교과서가 너 기다리다 먼지 쌓이겠다. 한 번만 펴 주자.",
+    "10-21": "내일 시험이다. 밤새면 내일 시험지가 외계어로 보인다. 일찍 자.",
+    "10-22": "첫날! 이름 안 쓰면 그 점수는 주인 없는 점수 된다. 이름부터 쓰자.",
+    "10-23": "어제 시험 답 맞춰보지 마. 정신 건강에 해롭다. 오늘 거에 집중!",
+    "10-24": "반 왔다! 오늘은 \"공부는 내일부터\" 금지. 내일은 진짜 시험 전날이야.",
+    "10-25": "일요일 저녁 그 기분 알지? 근데 내일은 월요일에 시험까지. 이중 콤보다. 일찍 자자.",
+    "10-26": "하루 남았다. 지금 포기하면 어제의 네가 운다. 내일의 너는 이미 놀 준비 중.",
+    "10-27": "마지막 날! 오늘 끝나면 '공부'라는 단어는 당분간 금지어로 지정한다."
+  };
+  var AFTER = "시험 끝! 교과서는 다음 시험 때까지 푹 쉬게 해 주자. 고생했다, 율아.";
+
+  var CHEERS = [
+    "율아, 오늘도 책상 앞에 앉은 거 진짜 대단한 거야.",
+    "힘들면 잠깐 쉬어도 돼. 넌 이미 충분히 열심히 하고 있어.",
+    "결과가 어떻든 난 언제나 네 편이야.",
+    "많이 피곤하지? 그래도 여기까지 온 너, 진짜 멋있다.",
+    "밥은 챙겨 먹었어? 공부보다 네가 먼저야.",
+    "율아, 너무 잘하려고 안 해도 돼. 너답게만 하자.",
+    "오늘 못 외운 건 내일 외우면 돼. 괜찮아.",
+    "네가 노력한 시간은 어디 안 가. 꼭 돌아올 거야.",
+    "시험 끝나면 맛있는 거 먹으러 가자. 기다리고 있을게.",
+    "가끔은 숨 크게 한 번 쉬어. 어깨 힘 빼고, 천천히.",
+    "너 생각보다 훨씬 잘하고 있어. 진짜로.",
+    "지칠 때마다 이 카드 찍어. 내가 응원하고 있다는 거 기억해.",
+    "점수가 너를 다 말해주진 않아. 넌 그것보다 훨씬 좋은 사람이야.",
+    "오늘 하루도 고생했어. 푹 자고 내일 또 하자.",
+    "율아, 넌 해낼 거야. 늘 그래왔던 것처럼.",
+    "물 한 잔 마시고 기지개 한 번 켜자. 서두르지 않아도 돼.",
+    "혼자 공부하는 것 같아도 혼자 아니야. 나도 같이 버티는 중이야.",
+    "실수해도 괜찮아. 그만큼 더 단단해지는 거니까.",
+    "너무 늦게까지 하지 마. 잘 자는 것도 실력이야.",
+    "오늘 네가 한 만큼이면 충분해. 스스로 칭찬해 줘.",
+    "시험 기간에도 네가 웃었으면 좋겠다. 조금만 더 힘내.",
+    "긴장되면 손 한 번 꽉 쥐었다 펴 봐. 넌 준비된 사람이야.",
+    "잘 안 되는 날도 있어. 그런 날도 괜찮아. 내일은 또 다를 거야.",
+    "율아, 항상 고마워. 시험 끝까지 옆에서 응원할게."
+  ];
+
+  /* ---------- storage (per viewer, optional) ---------- */
+  var store = {
+    get: function(k, d){ try { var v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch(e){ return d; } },
+    set: function(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} }
+  };
+
+  /* ---------- clock (with #preview-MMDD or #preview-MMDD-HHMM) ---------- */
+  var offset = 0;
+  function applyHash(){
+    var m = /^#preview-(\d{2})(\d{2})(?:-(\d{2})(\d{2}))?$/.exec(location.hash || "");
+    offset = 0;
+    $("preview").hidden = true;
+    if (m) {
+      var hh = m[3] || "15", mm = m[4] || "00";
+      var t = Date.parse("2026-" + m[1] + "-" + m[2] + "T" + hh + ":" + mm + ":00+09:00");
+      if (!isNaN(t)) {
+        offset = t - Date.now();
+        $("preview").textContent = "미리보기 · " + (+m[1]) + "월 " + (+m[2]) + "일 " + hh + ":" + mm + " 화면이에요";
+        $("preview").hidden = false;
+      }
+    }
+  }
+  function now(){ return Date.now() + offset; }
+  function kst(ms){
+    var d = new Date(ms + TZ);
+    var mo = d.getUTCMonth() + 1, da = d.getUTCDate();
+    return { m: mo, d: da, dow: d.getUTCDay(), num: Math.floor((ms + TZ) / DAY),
+             key: (mo < 10 ? "0" : "") + mo + "-" + (da < 10 ? "0" : "") + da };
+  }
+  function examState(ms){
+    var k = kst(ms), t = k.num;
+    if (ms >= UNLOCK) return { phase: "done", k: k, t: t };
+    if (t < START) return { phase: "before", k: k, t: t, dLeft: START - t };
+    var toEnd = LAST - t;
+    if (WEEKEND.indexOf(t) !== -1) return { phase: "weekend", k: k, t: t, toEnd: toEnd };
+    if (t === LAST) return { phase: "lastday", k: k, t: t, toEnd: 0, dayN: 4 };
+    return { phase: "exam", k: k, t: t, toEnd: toEnd, dayN: EXAM.indexOf(t) + 1 };
+  }
+
+  /* ---------- D-day ---------- */
+  var colEls = [];
+  (function buildCols(){
+    var wrap = $("ddCols");
+    for (var c = 0; c < 2; c++) {
+      var col = document.createElement("div"); col.className = "col";
+      var list = [];
+      for (var i = 0; i < 10; i++) {
+        var b = document.createElement("span"); b.className = "bub"; b.textContent = i;
+        col.appendChild(b); list.push(b);
+      }
+      wrap.appendChild(col); colEls.push(list);
+    }
+  })();
+
+  var DAYS = [
+    { n: dayNum(2026,10,22), d: 22, w: "목" }, { n: dayNum(2026,10,23), d: 23, w: "금" },
+    { n: dayNum(2026,10,24), d: 24, w: "토", rest: true }, { n: dayNum(2026,10,25), d: 25, w: "일", rest: true },
+    { n: dayNum(2026,10,26), d: 26, w: "월" }, { n: dayNum(2026,10,27), d: 27, w: "화" }
+  ];
+  var dayEls = DAYS.map(function(x){
+    var cell = document.createElement("div"); cell.className = "day";
+    var b = document.createElement("span"); b.className = "bub"; b.textContent = x.d;
+    var s = document.createElement("small");
+    cell.appendChild(b); cell.appendChild(s); $("strip").appendChild(cell);
+    return { cell: cell, label: s };
+  });
+
+  function renderDday(st){
+    var label, big, sub, n;
+    switch (st.phase) {
+      case "before":  label = "시험 시작까지"; big = "D-" + st.dLeft; n = st.dLeft; sub = "10월 22일 목요일부터 시작"; break;
+      case "exam":    label = "시험 끝까지";   big = "D-" + st.toEnd; n = st.toEnd; sub = "오늘은 시험 " + st.dayN + "일차"; break;
+      case "weekend": label = "시험 끝까지";   big = "D-" + st.toEnd; n = st.toEnd; sub = "주말 충전 중, 시험 반 왔다"; break;
+      case "lastday": label = "오늘 끝난다";   big = "D-DAY"; n = 0; sub = "시험 4일차, 마지막 날"; break;
+      default:        label = "시험 끝";       big = "끝!"; n = 0; sub = "4일 동안 진짜 고생 많았어";
+    }
+    $("ddLabel").textContent = label;
+    $("ddBig").textContent = big;
+    $("ddSub").textContent = sub;
+    var v = Math.min(99, Math.max(0, n)), digits = [Math.floor(v / 10), v % 10];
+    colEls.forEach(function(list, c){
+      list.forEach(function(b, i){ b.classList.toggle("on", i === digits[c]); });
+    });
+    DAYS.forEach(function(x, i){
+      var el = dayEls[i], isToday = x.n === st.t && st.phase !== "done";
+      var done = st.phase === "done" || x.n < st.t;
+      el.cell.className = "day" + (x.rest ? " rest" : "") + (done && !x.rest ? " done" : "") + (isToday ? " today" : "");
+      el.label.textContent = isToday ? "오늘" : (x.rest ? x.w + "·쉼" : x.w);
+    });
+  }
+
+  function renderDaily(st){
+    var k = st.k;
+    $("dDate").textContent = k.m + "월 " + k.d + "일 " + DOW[k.dow] + "요일";
+    var msg;
+    if (st.phase === "done") msg = AFTER;
+    else msg = DAILY[k.key] || (st.phase === "before" ? "시험까지 " + st.dLeft + "일. 오늘도 책이랑 조금만 친해져 보자." : "버티는 사람이 이긴다. 오늘도 버텨!");
+    $("dMsg").textContent = msg;
+    var wk = st.phase === "weekend";
+    $("weekendTag").hidden = !wk;
+    $("weekendNote").hidden = !wk;
+  }
+
+  function pad(n){ return (n < 10 ? "0" : "") + n; }
+
+  /* ---------- attendance stamps (kept in the friend's browser) ---------- */
+  var STAMP_FIRST = dayNum(2026, 10, 14), GOAL = 10, STAMP_DAYS = [];
+  for (var sd = STAMP_FIRST; sd <= LAST; sd++) STAMP_DAYS.push(sd);
+  var stampCells = STAMP_DAYS.map(function(n){
+    var cell = document.createElement("div"); cell.className = "st"; cell.setAttribute("aria-hidden", "true");
+    var s = document.createElement("small"); s.textContent = new Date(n * DAY).getUTCDate();
+    cell.appendChild(s); $("stamps").appendChild(cell);
+    return cell;
+  });
+  var sessionStamps = [];
+  function stampList(){
+    var l = store.get("cheer.stamps", []);
+    l = Array.isArray(l) ? l : [];
+    sessionStamps.forEach(function(n){ if (l.indexOf(n) === -1) l.push(n); });
+    return l;
+  }
+  function stampToday(t){
+    if (offset !== 0 || t < STAMP_FIRST || t > LAST) return false;
+    var list = stampList();
+    if (list.indexOf(t) !== -1) return false;
+    list.push(t); sessionStamps.push(t); store.set("cheer.stamps", list);
+    return true;
+  }
+  function renderStamps(t, fresh){
+    var list = stampList(), count = 0;
+    stampCells.forEach(function(cell, i){
+      var n = STAMP_DAYS[i], has = list.indexOf(n) !== -1, mark = cell.querySelector(".mark");
+      if (has) count++;
+      cell.className = "st" + (n === t ? " today" : "") + (n < t && !has ? " out" : "");
+      if (has && !mark) {
+        mark = document.createElement("span"); mark.className = "mark"; mark.textContent = "출석";
+        mark.style.setProperty("--r", (((n * 37) % 25) - 12) + "deg");
+        if (fresh && n === t) mark.classList.add("new");
+        cell.appendChild(mark);
+      } else if (!has && mark) { mark.remove(); }
+    });
+    $("stamps").setAttribute("role", "img");
+    $("stamps").setAttribute("aria-label", "출석 도장 " + count + "개");
+    $("stampCount").textContent = count + " / " + GOAL;
+    var msg;
+    if (offset !== 0) msg = "미리보기에서는 도장이 찍히지 않아요.";
+    else if (fresh) msg = "오늘 도장 쾅! 내일도 찍으러 와.";
+    else if (t > LAST) msg = "출석 기간 끝! 도장 " + count + "개 모았어.";
+    else if (list.indexOf(t) !== -1) msg = "오늘 도장은 이미 찍었어. 내일 또 와.";
+    else msg = "카드를 찍은 날마다 도장이 하나씩 찍혀.";
+    $("stampMsg").textContent = msg;
+    var reached = count >= GOAL;
+    $("stampBonus").hidden = !reached;
+    $("stampGoal").hidden = reached;
+    if (!reached) $("stampGoal").textContent = GOAL + "개 모으면 보너스 메시지가 열려. " + (GOAL - count) + "개 남았어.";
+  }
+
+  /* ---------- exam fortune (same all day, changes daily) ---------- */
+  function hash(s){ var h = 2166136261; for (var i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; }
+  var TOOLS = ["샤프", "컴퓨터용 사인펜", "형광펜", "빨간 펜", "지우개", "파란 볼펜", "포스트잇", "수정테이프"];
+  var LINES = [
+    "아는 문제가 생각보다 많이 나오는 날.",
+    "헷갈렸던 개념이 갑자기 이해되는 날.",
+    "실수만 줄이면 충분한 날. 문제는 끝까지 읽자.",
+    "집중력 최고. 어려운 단원 하기 딱 좋은 날.",
+    "쉬엄쉬엄 해도 머리에 잘 들어오는 날.",
+    "어제 외운 게 오늘 빛을 보는 날.",
+    "막히는 문제는 넘기면 술술 풀리는 날.",
+    "친구한테 설명해 주면 내 것이 되는 날.",
+    "검산 한 번이 점수를 지켜주는 날.",
+    "평소보다 조금 일찍 자면 운이 두 배.",
+    "작은 목표 하나만 끝내도 대성공인 날.",
+    "오늘 본 데서 시험 문제가 나올 것 같은 예감."
+  ];
+  function bubbles(el, count){
+    var out = [];
+    for (var i = 1; i <= count; i++) { var b = document.createElement("span"); b.className = "bub"; b.textContent = i; el.appendChild(b); out.push(b); }
+    return out;
+  }
+  var fScoreB = bubbles($("fScore"), 5), fNumB = bubbles($("fNum"), 5);
+  function renderFortune(key){
+    var score = 3 + hash("score" + key) % 3, num = 1 + hash("lucky" + key) % 5;
+    fScoreB.forEach(function(b, i){ b.classList.toggle("on", i < score); });
+    fNumB.forEach(function(b, i){ b.classList.toggle("on", i === num - 1); });
+    $("fScoreText").textContent = score + " / 5";
+    $("fNumText").textContent = num + "번 (찍으라는 뜻 아님)";
+    $("fTool").textContent = TOOLS[hash("tool" + key) % TOOLS.length];
+    $("fLine").textContent = LINES[hash("line" + key) % LINES.length];
+  }
+
+  var lastKey = "";
+  function tick(){
+    var ms = now(), st = examState(ms);
+    var key = st.k.key + st.phase;
+    if (key !== lastKey) {
+      var fresh = stampToday(st.t);
+      renderDday(st); renderDaily(st); renderFortune(st.k.key); renderStamps(st.t, fresh); renderMood(false);
+      lastKey = key;
+    }
+  }
+
+  /* ---------- cheer draw ---------- */
+  var lastIdx = -1;
+  function pickCheer(){
+    var i;
+    do { i = Math.floor(Math.random() * CHEERS.length); } while (i === lastIdx && CHEERS.length > 1);
+    lastIdx = i;
+    return CHEERS[i];
+  }
+  $("drawCard").addEventListener("click", function(){
+    var count = store.get("cheer.draws", 0) + 1;
+    store.set("cheer.draws", count);
+    var t = $("drawText");
+    t.textContent = pickCheer();
+    t.classList.remove("empty");
+    $("drawNo").textContent = "응원 No." + count;
+    var card = $("drawCard");
+    card.classList.remove("pop"); void card.offsetWidth; card.classList.add("pop");
+  });
+
+  /* ---------- mood check (one pick per day, kept in the friend's browser) ---------- */
+  var MOODS = {
+    dead: [
+      "그럴 줄 알았어. 일단 물 한 잔 마시고 딱 한 페이지만 하자. 한 페이지면 충분해.",
+      "죽긴 왜 죽어, 시험 끝나고 놀아야지. 5분만 쉬고 다시 가 보자.",
+      "오늘은 힘든 날인가 보다. 그런 날엔 조금만 해도 잘한 거야. 진짜로.",
+      "율아, 힘든 거 당연해. 그만큼 열심히 하고 있다는 뜻이야. 오늘은 일찍 자자."
+    ],
+    soso: [
+      "그럭저럭이면 이미 꽤 괜찮은 거야. 그 상태 그대로 쭉 가자.",
+      "무난한 날이 의외로 진도 빼기 딱 좋은 날이야. 오늘 쭉쭉 가자.",
+      "그럭저럭에서 꽤 괜찮음까지 한 단계만 올려 보자. 넌 할 수 있어."
+    ],
+    good: [
+      "오 좀 치는데? 그 자신감 시험 끝날 때까지 들고 가.",
+      "오늘의 허율, 아주 칭찬해. 그 기세로 어려운 단원 하나 끝내자.",
+      "자신감 만렙이네. 근데 방심 금지! 마킹 확인은 꼭 하고."
+    ]
+  };
+  var moodBtns = Array.prototype.slice.call(document.querySelectorAll(".mood"));
+  var memMood = null;
+  function moodKey(){ return "cheer.mood." + kst(now()).key; }
+  function savedMood(){
+    var sv = store.get(moodKey(), null);
+    if (!sv && memMood && memMood.day === kst(now()).key) sv = memMood;
+    return sv && MOODS[sv.m] ? sv : null;
+  }
+  function renderMood(animate){
+    var sv = savedMood(), el = $("moodReply");
+    moodBtns.forEach(function(b){ b.setAttribute("aria-pressed", String(!!sv && b.dataset.mood === sv.m)); });
+    if (sv) {
+      el.textContent = MOODS[sv.m][sv.i % MOODS[sv.m].length];
+      el.classList.remove("empty");
+      if (animate) { el.classList.remove("pop"); void el.offsetWidth; el.classList.add("pop"); }
+    } else {
+      el.textContent = "하나 골라봐. 기분에 맞는 답장이 나와.";
+      el.classList.add("empty");
+    }
+  }
+  moodBtns.forEach(function(b){
+    b.addEventListener("click", function(){
+      var m = b.dataset.mood, prev = savedMood(), list = MOODS[m];
+      var i = Math.floor(Math.random() * list.length);
+      if (prev && prev.m === m && list.length > 1 && i === prev.i) i = (i + 1) % list.length;
+      memMood = { day: kst(now()).key, m: m, i: i };
+      store.set(moodKey(), { m: m, i: i });
+      renderMood(true);
+    });
+  });
+
+  /* ---------- perfect-score talisman ---------- */
+  var overlay = $("charmOverlay"), charmBubs = bubbles($("charmBubs"), 5), lastFocus = null;
+  function openCharm(){
+    var lucky = Math.floor(Math.random() * 5);
+    charmBubs.forEach(function(b, i){ b.classList.toggle("on", i === lucky); });
+    lastFocus = document.activeElement;
+    overlay.hidden = false;
+    document.documentElement.style.overflow = "hidden";
+    $("charmClose").focus();
+  }
+  function closeCharm(){
+    overlay.hidden = true;
+    document.documentElement.style.overflow = "";
+    if (lastFocus && lastFocus.focus) lastFocus.focus();
+  }
+  $("charmOpen").addEventListener("click", openCharm);
+  $("miniCharm").addEventListener("click", openCharm);
+  $("charmClose").addEventListener("click", closeCharm);
+  overlay.addEventListener("click", function(e){ if (e.target === overlay) closeCharm(); });
+  document.addEventListener("keydown", function(e){ if (e.key === "Escape" && !overlay.hidden) closeCharm(); });
+
+  /* ---------- bottom tab bar ---------- */
+  var navBtns = Array.prototype.slice.call(document.querySelectorAll(".nav button"));
+  var navMap = { "sec-dday": "sec-dday", "sec-stamp": "sec-dday", "sec-today": "sec-today", "sec-fortune": "sec-today",
+                 "sec-draw": "sec-draw", "sec-mood": "sec-today", "sec-charm": "sec-charm" };
+  function setActive(target){
+    navBtns.forEach(function(b){ b.setAttribute("aria-current", String(b.dataset.target === target)); });
+  }
+  navBtns.forEach(function(b){
+    b.addEventListener("click", function(){
+      var el = $(b.dataset.target);
+      if (el) el.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+      setActive(b.dataset.target);
+    });
+  });
+  setActive("sec-dday");
+  if ("IntersectionObserver" in window) {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ if (e.isIntersecting && navMap[e.target.id]) setActive(navMap[e.target.id]); });
+    }, { rootMargin: "-35% 0px -60% 0px" });
+    Object.keys(navMap).forEach(function(id){ var el = $(id); if (el) io.observe(el); });
+  }
+
+  /* ---------- boot ---------- */
+  applyHash();
+  window.addEventListener("hashchange", function(){ applyHash(); lastKey = ""; tick(); });
+  tick();
+  setInterval(tick, 1000);
+})();
+</script>
+
+</body>
+</html>
